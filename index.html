@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SortingAlgo Visualizer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>
+        <b>Sorting Algorithm Visualizer</b>
+    </h1>
+    <div id="reserved"></div>
+        <label for="SortingAlgoChoice">Sorting Algorithm:</label>
+        <select id="SortingAlgoChoice" name="SortingAlgoChoice">
+            <option value="Selection Sort">Selection Sort</option>
+            <option value="Bubble Sort">Bubble Sort</option>
+            <option value="Insertion Sort">Insertion Sort</option>
+            <option value="Merge Sort">Merge Sort</option>
+            <option value="Quick Sort">Quick Sort</option>
+            <option value="Heap Sort">Heap Sort</option>
+        </select>
+    </div>
+    <div id="container"></div>
+    <div>
+        <button onClick="init()">init</button>
+        <button onClick="play()">play</button>
+        <button onClick="stop()">stop</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
