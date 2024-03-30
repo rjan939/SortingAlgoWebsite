@@ -3,6 +3,26 @@ const array = [];
 
 init();
 
+// Selecting size slider from DOM
+let arraySize = document.querySelector('#arr_sz');
+
+// Event listener to update the bars on the UI
+arraySize.addEventListener('input', function() {
+    console.log(arraySize.value, typeof(arraySize.value));
+    n = parseInt(arraySize.value);
+});
+
+let delay = 260;
+
+// Selecting speed slider from DOM
+let delayElement = document.querySelector('#speed_input');
+
+// Event listener to update delay time 
+delayElement.addEventListener('input', function(){
+    console.log(delayElement.value, typeof(delayElement.value));
+    delay = 320 - parseInt(delayElement.value);
+});
+
 let audioCtx = null;
 
 function stop() {
@@ -64,7 +84,7 @@ function animate(moves) {
     showBars(move)
     setTimeout(function() {
         animate(moves);
-    }, 500);
+    }, delay);
 }
 
 function showBars(move) {
@@ -101,19 +121,23 @@ function bubbleSort(array) {
 function selectionSort(array) {
     const moves = [];
     let i, j, min_idx;
-    for (i = 0; i < array.length - 1; i++) {
+    min_idx = 0;
+    let n = array.length;
+    for (i = 0; i < n - 1; i++) {
         min_idx = i;
-        for (j = i + 1; j < array.length; j++) {
-            moves.push({indices: [j, min_idx], type: "comparison"});
+        for (j = i + 1; j < n; j++) {
+            //moves.push({indices: [min_idx, j], type: "comparison"});
             if (array[j] < array[min_idx]) {
-                moves.push({indices: [j, min_idx], type: "swap"});
                 min_idx = j;
             }
-            let temp = array[min_idx];
-            array[min_idx] = array[i];
-            array[i] = temp;
         }
+        moves.push({indices: [j, min_idx], type: "swap"});
+        let temp = array[min_idx];
+        array[min_idx] = array[i];
+        array[i] = temp;
+        console.log(array);
     }
+    console.log(array);
     return moves;
 }
 
