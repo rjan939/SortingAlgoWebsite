@@ -1,3 +1,4 @@
+
 const n = 10;
 const array = [];
 
@@ -59,7 +60,7 @@ function init() {
 
 function play() {
     const copy = [...array];
-    const moves = bubbleSort(copy);
+    const moves = selectionSort(copy);
     animate(moves);
 }
 
@@ -126,12 +127,12 @@ function selectionSort(array) {
     for (i = 0; i < n - 1; i++) {
         min_idx = i;
         for (j = i + 1; j < n; j++) {
-            //moves.push({indices: [min_idx, j], type: "comparison"});
+            moves.push({indices: [min_idx, j], type: "comparison"});
             if (array[j] < array[min_idx]) {
                 min_idx = j;
             }
         }
-        moves.push({indices: [j, min_idx], type: "swap"});
+        moves.push({indices: [i, min_idx], type: "swap"});
         let temp = array[min_idx];
         array[min_idx] = array[i];
         array[i] = temp;
@@ -141,6 +142,28 @@ function selectionSort(array) {
     return moves;
 }
 
+
+function insertionSort(array) {
+    const moves = [];
+    let i, key, j;  
+    let n = array.length;
+    for (i = 1; i < n; i++)
+    {  
+        key = array[i];  
+        j = i - 1;
+   
+        while (j >= 0 && array[j] > key) 
+        {
+            //moves.push({indices: })
+            moves.push({indices: [j + 1, j], type: "swap"});
+            array[j + 1] = array[j];  
+            j = j - 1;  
+        }  
+        moves.push({indices: [j + 1, key], type: "swap"});
+        array[j + 1] = key;  
+    }
+    return moves;
+}
 function makeGreen() {
     var childDivs = document.getElementById("container"),
         subDiv = document.getElementsByClassName("bar");
@@ -151,4 +174,3 @@ function makeGreen() {
     }
 
 }
-
