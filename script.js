@@ -1,17 +1,18 @@
 
-const n = 10;
-const array = [];
+let array = [];
+let arraySize = document.querySelector('#size_input');
+const minSize = 10;
+let size = minSize;
 
-init();
-
-// Selecting size slider from DOM
-let arraySize = document.querySelector('#arr_sz');
 
 // Event listener to update the bars on the UI
-arraySize.addEventListener('input', function() {
+function updateSize() {
     console.log(arraySize.value, typeof(arraySize.value));
-    n = parseInt(arraySize.value);
-});
+    const n = minSize + parseInt(arraySize.value);
+    init(n);
+}
+init(minSize);
+arraySize.addEventListener('input', updateSize);
 
 let delay = 260;
 
@@ -25,6 +26,7 @@ delayElement.addEventListener('input', function(){
 });
 
 let audioCtx = null;
+
 
 function stop() {
     container.innerHTML = "";
@@ -51,17 +53,21 @@ function playNote(freq) {
 }
 
 
-function init() {
-    for (let i = 0; i < n; i++) {
+function init(newSize) {
+    array = [];
+    for (let i = 0; i < newSize; i++) {
         array[i] = Math.random();
     }
     showBars();
 }
 
 function play() {
+    const choice = determineChoice();
+    //disableInput();
     const copy = [...array];
-    const moves = selectionSort(copy);
+    const moves = choice(copy, copy.length);
     animate(moves);
+    //enableInput();
 }
 
 function animate(moves) {
@@ -101,11 +107,12 @@ function showBars(move) {
     }
 }
 
-function bubbleSort(array) {
+function bubbleSort(array, n) {
     const moves = [];
+    let swapped = false;
     do {
-        var swapped = false;
-        for (let i = 1; i < array.length; i++) {
+        swapped = false;
+        for (let i = 1; i < n; i++) {
             moves.push({indices: [i - 1, i], type: "comparison"});
             if (array[i - 1] > array[i]) {
                 moves.push({indices: [i - 1, i], type: "swap"});
@@ -119,11 +126,10 @@ function bubbleSort(array) {
     return moves;
 }
 
-function selectionSort(array) {
+function selectionSort(array, n) {
     const moves = [];
     let i, j, min_idx;
     min_idx = 0;
-    let n = array.length;
     for (i = 0; i < n - 1; i++) {
         min_idx = i;
         for (j = i + 1; j < n; j++) {
@@ -143,29 +149,114 @@ function selectionSort(array) {
 }
 
 
-function insertionSort(array) {
+function insertionSort(arr, n) {
     const moves = [];
     let i, key, j;  
-    let n = array.length;
-    for (i = 1; i < n; i++)
+{  
+    let i, key, j;  
+    for (i = 1; i < n; i++) 
     {  
-        key = array[i];  
-        j = i - 1;
-   
-        while (j >= 0 && array[j] > key) 
-        {
-            //moves.push({indices: })
-            moves.push({indices: [j + 1, j], type: "swap"});
-            array[j + 1] = array[j];  
+        key = arr[i];  
+        j = i - 1;  
+  
+        /* Move elements of arr[0..i-1], that are  
+        greater than key, to one position ahead  
+        of their current position */
+        moves.push({indices: [j, key], type: "comparison"});
+        while (j >= 0 && arr[j] > key) 
+        {  
+            arr[j + 1] = arr[j];
+            moves.push({indices: [j + 1, j], type: "swap"});  
             j = j - 1;  
         }  
-        moves.push({indices: [j + 1, key], type: "swap"});
-        array[j + 1] = key;  
-    }
+        arr[j + 1] = key;
+        moves.push({indices: [j + 1, key], type: "swap"});  
+    }  
+}  
     return moves;
 }
+
+function mergeSort(array, n) {
+    sort(array, 0, n - 1);
+}
+
+function sort(arr, left, right) {
+    if (left >= right) {
+        return;
+    }
+    
+    // Middle index to create subarray halves
+    let middle = left + parseInt((right - left) / 2);
+    
+    // Apply mergeSort to both the halves
+    sort(arr, left, middle);
+    sort(arr, middle + 1, right);
+    
+    // Merge both sorted parts
+    merge(arr, left, middle, right);
+}
+
+function merge(arr, left, middle, right) {
+    
+    // Length of both sorted aub arrays
+    let l1 = middle - left + 1;
+    let l2 = right - middle;
+    // Create new subarrays
+    let arr1 = new Array(l1);
+    let arr2 = new Array(l2);
+    
+    // Assign values in subarrays
+    for (let i = 0; i < l1; ++i) {
+        arr1[i] = arr[left + i];
+    }
+    for (let i = 0; i < l2; ++i) {
+        arr2[i] = arr[middle + 1 + i];
+    }
+
+    // To travesrse and modify main array
+    let i = 0,
+        j = 0,
+        k = left;
+        
+    // Assign the smaller value for sorted output
+    while (i < l1 && j < l2) {
+        if (arr1[i] < arr2[j]) {
+            arr[k] = arr1[i];
+            ++i;
+        } else {
+            arr[k] = arr2[j];
+            j++;
+        }
+        k++;
+    }
+    // Update the remaining elements
+    while (i < l1) {
+        arr[k] = arr1[i];
+        i++;
+        k++;
+    }
+    while (j < l2) {
+        arr[k] = arr2[j];
+        j++;
+        k++;
+    }
+}
+
+function quickSort(array, n) {
+
+}
+
+function heapSort(array, n) {
+
+}
+
+
+
+
+
+
 function makeGreen() {
-    var childDivs = document.getElementById("container"),
+    let childDivs = document.getElementById("container"),
         subDiv = document.getElementsByClassName("bar");
     
     for (let i = 0; i < subDiv.length; i++) {
@@ -173,4 +264,35 @@ function makeGreen() {
         elem.style.backgroundColor = "green";
     }
 
+}
+
+function determineChoice() {
+    const choice = document.getElementById("SortingAlgoChoice");
+
+    switch (choice.value) {
+        case "Selection Sort":
+            return selectionSort;
+        case "Insertion Sort":
+            return insertionSort;
+        case "Merge Sort":
+            return mergeSort;
+        case "Quick Sort":
+            return quickSort;
+        case "Heap Sort":
+            return heapSort;
+        default:
+            return bubbleSort;
+    }
+}
+
+function disableInput() {
+    document.getElementById("size_input").disabled = true;
+    document.getElementById("init").disabled = true;
+    document.getElementById("SortingAlgoChoice").disabled = true;
+}
+
+function enableInput() {
+    document.getElementById("init").disabled = false;
+    document.getElementById("size_input").disabled = false;
+    document.getElementById("SortingAlgoChoice").disabled = false;
 }
